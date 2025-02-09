@@ -6,7 +6,7 @@ import PokemonList from './components/PokemonList';
 const POKEAPI_BASE = 'https://pokeapi.co/api/v2/';
 
 function Pokedex() {
-	const { name } = useName();
+	const { name, clearName } = useName();
 	const [search, setSearch] = useState('');
 	const [pokemon, setPokemon] = useState([]);
 	const [filteredPokemon, setFilteredPokemon] = useState(pokemon);
