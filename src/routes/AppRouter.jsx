@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router';
 import Home from '../app/home/Home';
-import Pokedex from '../app/pokedex/pokedex';
-import Pokemon from '../app/pokemon/pokemon';
+import Pokedex from '../app/pokedex/Pokedex';
+import Pokemon from '../app/pokemon/Pokemon';
 
 function AppRouter() {
 	return (
