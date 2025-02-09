@@ -24,34 +24,34 @@ function PokemonCard({ url }) {
 		>
 			<div className="pokecard__header">
 				<img
-					src={pokemon?.sprites?.front_default}
+					src={pokemon?.sprites?.other['official-artwork']?.front_default}
 					alt={pokemon.name}
 					className="pokecard__header-img"
 				/>
 			</div>
 			<div className="pokecard__body">
-				<h2 className="pokecard__name">{pokemon?.name}</h2>
-				<h3 className="pokecard__types">{types?.join(' / ')}</h3>
-				<p className="pokecard__types-label">Types</p>
+				<h2 className="pokecard__body-name">{pokemon?.name}</h2>
+				<h3 className="pokecard__body-types">{types?.join(' / ')}</h3>
+				<p className="pokecard__body-types-label">Types</p>
 
 				<div className="pokecard__stats">
 					<div className="pokecard__stats-item">
-						HP: <span>{hp?.base_stat}</span>
+						HP <span>{hp?.base_stat}</span>
 					</div>
 					<div className="pokecard__stats-item">
-						Atk: <span>{attack?.base_stat}</span>
+						Atk <span>{attack?.base_stat}</span>
 					</div>
 					<div className="pokecard__stats-item">
-						Def: <span>{defense?.base_stat}</span>
+						Def <span>{defense?.base_stat}</span>
 					</div>
 					<div className="pokecard__stats-item">
-						Sp. Atk.: <span>{specialAttack?.base_stat}</span>
+						Sp Atk <span>{specialAttack?.base_stat}</span>
 					</div>
 					<div className="pokecard__stats-item">
-						Sp. Def.: <span>{specialDefense?.base_stat}</span>
+						Sp Def <span>{specialDefense?.base_stat}</span>
 					</div>
 					<div className="pokecard__stats-item">
-						Speed: <span>{speed?.base_stat}</span>
+						Speed <span>{speed?.base_stat}</span>
 					</div>
 				</div>
 			</div>
