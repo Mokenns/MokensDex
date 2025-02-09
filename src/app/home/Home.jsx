@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useName } from '../../hooks/useName';
 import { useNavigate } from 'react-router';
-import './styles/Home.scss';
+import './styles/home.scss';
 function Home() {
 	const { setName, name } = useName();
 	const inputRef = useRef();
