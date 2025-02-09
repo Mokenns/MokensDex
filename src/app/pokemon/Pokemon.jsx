@@ -48,6 +48,7 @@ function Pokemon() {
 			<p>
 				Speed: <span>{speed?.base_stat}</span>
 			</p>
+			<p>Moves:</p>
 			<ul>
 				{pokemon?.moves?.map((m) => (
 					<li key={m.move.name}>{m.move.name}</li>

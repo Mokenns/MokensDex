@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useName } from '../../hooks/useName';
 import { useNavigate } from 'react-router';
-
+import './styles/Home.scss';
 function Home() {
 	const { setName, name } = useName();
 	const inputRef = useRef();
@@ -12,7 +12,7 @@ function Home() {
 		navigate('/pokedex');
 	};
 	return (
-		<div>
+		<div className="home">
 			{name && <h2>Welcome, {name}!</h2>}
 			<h1>Mokens' Pokédex site! 🥳</h1>
 			<p>Enter your name:</p>
@@ -21,7 +21,9 @@ function Home() {
 				ref={inputRef}
 				onKeyDown={(e) => e.key === 'Enter' && handleSetName()}
 			/>
-			<button onClick={handleSetName}>Start!</button>
+			<button className="btn" onClick={handleSetName}>
+				Start!
+			</button>
 		</div>
 	);
 }
