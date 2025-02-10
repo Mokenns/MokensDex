@@ -22,36 +22,44 @@ function Pokemon() {
 	console.log(pokemon);
 
 	return (
-		<div>
-			<img src={pokemon?.sprites?.front_default} alt={pokemon.name} />
-			<span># {pokemon?.id?.toString().padStart(3, 0)}</span>
-			<h2>{pokemon?.name}</h2>
-			<p>Weight: {pokemon?.weight}</p>
-			<p>Height: {pokemon?.height}</p>
+		<div className="pokemon">
+			<img
+				className="pokemon__img"
+				src={pokemon?.sprites?.other['official-artwork']?.front_default}
+				alt={pokemon.name}
+			/>
+			<span className="pokemon-id">
+				# {pokemon?.id?.toString().padStart(3, 0)}
+			</span>
+			<h2 className="pokemon-name">{pokemon?.name}</h2>
+			<p className="pokemon-info">Weight: {pokemon?.weight}</p>
+			<p className="pokemon-info">Height: {pokemon?.height}</p>
 			<p>Types: {types?.join(',')}</p>
 			<p>Abilities: {ability?.join(',')}</p>
-			<p>
+			<p className="pokemon__stats">
 				HP: <span>{hp?.base_stat}</span>
 			</p>
-			<p>
+			<p className="pokemon__stats">
 				Atk: <span>{attack?.base_stat}</span>
 			</p>
-			<p>
+			<p className="pokemon__stats">
 				Def: <span>{defense?.base_stat}</span>
 			</p>
-			<p>
+			<p className="pokemon__stats">
 				Sp. Atk.: <span>{specialAttack?.base_stat}</span>
 			</p>
-			<p>
+			<p className="pokemon__stats">
 				Sp. Def.: <span>{specialDefense?.base_stat}</span>
 			</p>
-			<p>
+			<p className="pokemon__stats">
 				Speed: <span>{speed?.base_stat}</span>
 			</p>
-			<p>Moves:</p>
-			<ul>
+			<p className="pokemon__moves">Moves:</p>
+			<ul className="pokemon__moves-list">
 				{pokemon?.moves?.map((m) => (
-					<li key={m.move.name}>{m.move.name}</li>
+					<li className="pokemon__moves-list-item" key={m.move.name}>
+						{m.move.name}
+					</li>
 				))}
 			</ul>
 		</div>
