@@ -1,6 +1,7 @@
 import { useName } from '../../hooks/useName';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { Link } from 'react-router';
 import axios from 'axios';
 import PokemonList from './components/PokemonList';
 const POKEAPI_BASE = 'https://pokeapi.co/api/v2/';
@@ -111,11 +112,11 @@ function Pokedex() {
 
 			<pre>
 				{singlePokemon ? (
-					<Link to={`/pokedex/${singlePokemon.name}`}>
+					<Link to={`/pokedex/${singlePokemon?.name}`}>
 						<h2>{singlePokemon?.name}</h2>
 						<img
 							src={singlePokemon?.sprites?.front_default}
-							alt={singlePokemon.name}
+							alt={singlePokemon?.name}
 						/>
 					</Link>
 				) : (

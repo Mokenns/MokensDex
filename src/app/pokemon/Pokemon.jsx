@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import axios from 'axios';
+import './styles/Pokemon.scss';
 const POKEAPI_BASE = 'https://pokeapi.co/api/v2/';
 
 function Pokemon() {
@@ -22,20 +23,21 @@ function Pokemon() {
 	console.log(pokemon);
 
 	return (
-		<div className="pokemon">
+		<div className={`pokemon type--${types?.[0]}`}>
 			<img
 				className="pokemon__img"
 				src={pokemon?.sprites?.other['official-artwork']?.front_default}
 				alt={pokemon.name}
 			/>
-			<span className="pokemon-id">
+			<span className="pokemon__id">
 				# {pokemon?.id?.toString().padStart(3, 0)}
 			</span>
-			<h2 className="pokemon-name">{pokemon?.name}</h2>
-			<p className="pokemon-info">Weight: {pokemon?.weight}</p>
-			<p className="pokemon-info">Height: {pokemon?.height}</p>
-			<p>Types: {types?.join(',')}</p>
-			<p>Abilities: {ability?.join(',')}</p>
+			<h2 className="pokemon__name">{pokemon?.name}</h2>
+			<p className="pokemon__info">
+				Weight: {pokemon?.weight} lb Height: {pokemon?.height} inches
+			</p>
+			<p className="pokemon__data">Types: {types?.join('  ').toUpperCase()}</p>
+			<p className="pokemon__data">Abilities: {ability?.join(',')}</p>
 			<p className="pokemon__stats">
 				HP: <span>{hp?.base_stat}</span>
 			</p>
