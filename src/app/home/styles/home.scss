@@ -1,5 +1,70 @@
+body {
+  background: linear-gradient(to bottom, white, rgb(255, 67, 67));
+  min-height: 100vh; 
+  margin: 0;
+  padding: 0;
+}
+
 .home {
-  display: grid;
-  place-content: center;
-  min-height: 100dvh
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+text-align: center;
+}
+
+.home-card {
+background: rgba(255, 255, 255, 0.9);
+padding: 3rem;
+border-radius: 20px;
+box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+max-width: 500px;
+width: 100%;
+}
+
+.home-title {
+font-size: 3rem;
+color: #d32f2f;
+font-weight: bold;
+margin-bottom: 1rem;
+}
+
+.home-greeting {
+font-size: 2rem;
+color: #333;
+margin-bottom: 1.5rem;
+}
+
+.home-text {
+font-size: 1.2rem;
+color: #444444;
+margin-bottom: 2rem;
+}
+
+.home-input {
+width: 100%;
+padding: 1rem;
+border: 3px solid #d32f2f;
+border-radius: 15px;
+font-size: 1.2rem;
+text-align: center;
+margin-bottom: 1.5rem;
+}
+
+.home-button {
+width: 100%;
+background: #d32f2f;
+color: white;
+border: none;
+padding: 1rem;
+border-radius: 15px;
+font-size: 1.2rem;
+font-weight: bold;
+cursor: pointer;
+transition: background 0.3s ease, transform 0.2s;
+}
+
+.home-button:hover {
+background: #b71c1c;
+transform: scale(1.05);
 }
