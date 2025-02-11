@@ -1,31 +1,52 @@
 import { useName } from '../../hooks/useName';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { Link } from 'react-router';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PokemonList from './components/PokemonList';
-const POKEAPI_BASE = 'https://pokeapi.co/api/v2/';
+import { Link } from 'react-router';
+import './styles/Pokedex.scss';
 
+const POKEAPI_BASE = 'https://pokeapi.co/api/v2/';
 function Pokedex() {
-	const { name, clearName } = useName();
+	const [pokemons, setPokemons] = useState([]);
+	const [filteredPokemons, setFilteredPokemons] = useState([]);
 	const [search, setSearch] = useState('');
-	const [pokemon, setPokemon] = useState([]);
-	const [filteredPokemon, setFilteredPokemon] = useState(pokemon);
 	const [selectedType, setSelectedType] = useState('all');
 	const [types, setTypes] = useState([]);
 	const [singlePokemon, setSinglePokemon] = useState(null);
+	const [error, setError] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const pokemonsPerPage = 12;
 
-	const getFirstPokemon = () => {
-		axios.get(`${POKEAPI_BASE}pokemon?limit=151`).then(({ data }) => {
-			setPokemon(data.results);
-			setFilteredPokemon(data.results);
+	const { name } = useName();
+
+	const getInitialPokemons = () => {
+		axios.get(`${POKEAPI_BASE}/pokemon?limit=1172`).then(({ data }) => {
+			setPokemons(data.results);
+			setFilteredPokemons(data.results);
 			setSinglePokemon(null);
+			setCurrentPage(1);
 		});
 	};
 
 	useEffect(() => {
-		getFirstPokemon();
+		getInitialPokemons();
 	}, []);
+
+	useEffect(() => {
+		if (!search) {
+			setFilteredPokemons(pokemons);
+			setSinglePokemon(null);
+			setCurrentPage(1);
+			return;
+		}
+
+		setFilteredPokemons(
+			pokemons.filter((pokemon) =>
+				pokemon.name.toLowerCase().includes(search.toLowerCase()),
+			),
+		);
+		setCurrentPage(1);
+	}, [search, pokemons]);
 
 	useEffect(() => {
 		axios
@@ -34,97 +55,134 @@ function Pokedex() {
 	}, []);
 
 	useEffect(() => {
-		if (!search) {
-			setFilteredPokemon(pokemon);
-			setSinglePokemon(null);
-			return;
-		}
-
-		setFilteredPokemon(
-			pokemon.filter((poke) =>
-				poke.name.toLowerCase().includes(search.toLowerCase()),
-			),
-		);
-	}, [search, pokemon]);
-
-	useEffect(() => {
 		if (selectedType === 'all') {
-			setFilteredPokemon(pokemon);
+			getInitialPokemons();
 			return;
 		}
 
-		axios.get(`${POKEAPI_BASE}type/${selectedType}`).then(({ data }) => {
-			const typePokemon = data.pokemon.map((poke) => poke.pokemon);
-			setPokemon(typePokemon);
-			setFilteredPokemon(typePokemon);
+		axios.get(`${POKEAPI_BASE}/type/${selectedType}`).then(({ data }) => {
+			const typePokemons = data.pokemon.map((p) => p.pokemon);
+			setPokemons(typePokemons);
+			setFilteredPokemons(typePokemons);
+			setSinglePokemon(null);
+			setCurrentPage(1);
 		});
-	}, [selectedType, pokemon]);
+	}, [selectedType]);
 
 	const searchPokemon = () => {
 		if (!search) {
-			getFirstPokemon();
+			getInitialPokemons();
 			return;
 		}
 
+		const searchId = parseInt(search, 10);
+
 		axios
-			.get(`${POKEAPI_BASE}pokemon/${search}`)
+			.get(`${POKEAPI_BASE}/pokemon/${searchId}`)
 			.then(({ data }) => {
 				if (selectedType !== 'all') {
-					const isOfType = data.types.some(
-						(type) => type.type.name === selectedType,
-					);
+					const isOfType = data.types.some((t) => t.type.name === selectedType);
 					if (!isOfType) {
 						setSinglePokemon(null);
-						alert('This Pokémon is not of the selected type');
+						alert('El pokémon indicado, NO es del TIPO seleccionado');
 						return;
 					}
 				}
 				setSinglePokemon(data);
+				setError(null);
 			})
-			.catch(() => alert('Pokémon not found'));
+			.catch(() => {
+				setError('El pokémon no existe');
+				setSinglePokemon(null);
+			});
 	};
 
+	const totalPages = Math.ceil(filteredPokemons.length / pokemonsPerPage);
+	const indexOfLastPokemon = currentPage * pokemonsPerPage;
+	const indexOfFirstPokemon = indexOfLastPokemon - pokemonsPerPage;
+	const currentPokemons = filteredPokemons.slice(
+		indexOfFirstPokemon,
+		indexOfLastPokemon,
+	);
+
 	return (
-		<div>
-			<h1>Pokédex</h1>
+		<div className="pokedex-container">
+			<h2 className="pokedex-title">POKÉDEX</h2>
 			{name && (
-				<p>Welcome, {name}! You can search your favorite Pokémon here 🥳</p>
+				<p className="pokedex-welcome">
+					¡Bienvenido {name}!, aquí podrás encontrar a tu pokémon favorito.
+				</p>
 			)}
-			<input
-				type="text"
-				value={search}
-				onChange={(e) => setSearch(e.target.value)}
-				placeholder="Filter or search by name or ID"
-				onKeyDown={(e) => e.key === 'Enter' && searchPokemon()}
-			/>
-			<button onClick={searchPokemon}>Search</button>
-			<select
-				value={selectedType}
-				onChange={(e) => setSelectedType(e.target.value)}
-			>
-				<option value="all">all</option>
-				{types.map((type) => (
-					<option key={type.name} value={type.name}>
-						{type.name}
-					</option>
-				))}
-			</select>
+			<div className="pokedex-controls">
+				<input
+					type="text"
+					className="pokedex-search"
+					placeholder="Busca un pokémon"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+					onKeyDown={(e) => e.key === 'Enter' && searchPokemon()}
+				/>
+				<button className="pokedex-button" onClick={searchPokemon}>
+					Buscar
+				</button>
+				<select
+					className="pokedex-select"
+					value={selectedType}
+					onChange={(e) => setSelectedType(e.target.value)}
+				>
+					<option value="all">Todos</option>
+					{types.map((type) => (
+						<option key={type.name} value={type.name}>
+							{type.name}
+						</option>
+					))}
+				</select>
+			</div>
 
-			<pre>
-				{singlePokemon ? (
-					<Link to={`/pokedex/${singlePokemon?.name}`}>
-						<h2>{singlePokemon?.name}</h2>
-						<img
-							src={singlePokemon?.sprites?.front_default}
-							alt={singlePokemon?.name}
-						/>
-					</Link>
-				) : (
-					<PokemonList pokemon={filteredPokemon} />
-				)}
-			</pre>
-
-			<PokemonList pokemon={filteredPokemon} />
+			{singlePokemon ? (
+				<Link className="pokedex-single" to={`/pokedex/${singlePokemon.name}`}>
+					<h2>{singlePokemon.name}</h2>
+					<img
+						src={singlePokemon.sprites?.front_default}
+						alt={singlePokemon.name}
+					/>
+				</Link>
+			) : (
+				<>
+					<PokemonList pokemon={currentPokemons} />
+					<div className="pagination">
+						<button
+							onClick={() => setCurrentPage(1)}
+							disabled={currentPage === 1}
+						>
+							1
+						</button>
+						<button
+							onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+							disabled={currentPage === 1}
+						>
+							Anterior
+						</button>
+						<span>
+							Página {currentPage} de {totalPages}
+						</span>
+						<button
+							onClick={() =>
+								setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+							}
+							disabled={currentPage === totalPages}
+						>
+							Siguiente
+						</button>
+						<button
+							onClick={() => setCurrentPage(totalPages)}
+							disabled={currentPage === totalPages}
+						>
+							{totalPages}
+						</button>
+					</div>
+				</>
+			)}
 		</div>
 	);
 }
